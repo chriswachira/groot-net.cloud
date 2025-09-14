@@ -1,0 +1,22 @@
+# Local .terraform directories
+**/.terraform/
+**/.terraform.*
+
+# Terraform state files and backups
+*.tfstate
+*.tfstate.*
+
+# Terraform variable definition files (if containing sensitive data)
+# Consider committing these if they do not contain secrets and are essential for environment setup
+*.tfvars
+*.tfvars.json
+
+# Terraform override files
+*.tfoverride
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Environment-specific files
+.envrc
