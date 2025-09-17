@@ -25,5 +25,6 @@ include:
   - component: $CI_SERVER_FQDN/components/opentofu/validate-plan-apply@3.1.0
     inputs:
       opentofu_version: 1.10.5
+      root_dir: opentofu/
 
 stages: [validate, build, deploy]
