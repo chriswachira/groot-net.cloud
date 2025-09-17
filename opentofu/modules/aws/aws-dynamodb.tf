@@ -114,7 +114,7 @@ resource "aws_dynamodb_table" "groot_net_teleport_cluster_events_table" {
 
 // DynamoDB table for simple locking mechanism
 resource "aws_dynamodb_table" "groot_net_teleport_cluster_locks_table" {
-  name           = "groot_net_teleport_cluster_locks"
+  name           = "groot-net.cloud_teleport_cluster_locks"
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "Lock"
