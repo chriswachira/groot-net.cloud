@@ -5,26 +5,24 @@
 # Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
-# :stages:
-# - test
-# :sast:
-#   :stage: test
-# :include:
-# - :template: Security/SAST.gitlab-ci.yml
-# stages:
-# - test
-# - secret-detection
-# variables:
-#   SECRET_DETECTION_ENABLED: 'true'
-# secret_detection:
-#   stage: secret-detection
-# include:
-# - template: Security/Secret-Detection.gitlab-ci.yml
-# - local: opentofu/.gitlab-ci.yml
+stages:
+- test
+- secret-detection
+- validate
+- build
+- deploy
+sast:
+  stage: test
+variables:
+  SECRET_DETECTION_ENABLED: 'true'
+secret_detection:
+  stage: secret-detection
 include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
   - component: $CI_SERVER_FQDN/components/opentofu/validate-plan-apply@3.1.0
     inputs:
       opentofu_version: 1.10.5
       root_dir: opentofu/
-
-stages: [validate, build, deploy]
+      state_name: production
+      auto_encryption: true
