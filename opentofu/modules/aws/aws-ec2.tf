@@ -51,7 +51,7 @@ resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
     availability_zone = aws_subnet.groot_net_vpc_public_subnet.availability_zone
   }
 
-  vpc_security_group_ids = ["sg-12345678"]
+  vpc_security_group_ids = [aws_security_group.groot_net_teleport_cluster_security_group.id]
 
   tag_specifications {
     resource_type = "instance"
@@ -88,4 +88,58 @@ resource "aws_vpc_security_group_ingress_rule" "teleport_cluster_ssh_ingress_sgp
   ip_protocol       = "tcp"
   from_port         = 22
   to_port           = 22
+}
+
+resource "aws_network_interface" "groot_net_teleport_cluster_instance_eni" {
+  subnet_id = aws_subnet.groot_net_vpc_public_subnet.id
+}
+
+resource "aws_instance" "groot_net_teleport_cluster_instance" {
+  ami                     = "ami-0438fcc5e04aa9413"
+  instance_type           = "t4g.micro"
+  disable_api_termination = true
+  subnet_id               = aws_subnet.groot_net_vpc_public_subnet.id
+  availability_zone       = aws_subnet.groot_net_vpc_public_subnet.availability_zone
+  key_name                = aws_key_pair.groot_net_teleport_cluster_key_pair.key_name
+  vpc_security_group_ids  = [aws_security_group.groot_net_teleport_cluster_security_group.id]
+  iam_instance_profile    = aws_iam_instance_profile.groot_net_teleport_cluster_instance_profile.id
+
+  primary_network_interface {
+    network_interface_id = aws_network_interface.groot_net_teleport_cluster_instance_eni.id
+  }
+
+  ebs_block_device {
+    device_name           = "/dev/sdf"
+    delete_on_termination = true
+    volume_size           = 10
+    volume_type           = "gp2"
+  }
+
+  user_data = templatefile(
+    "${path.module}/aws-ec2-user-data.tpl",
+    {
+      region                   = "eu-west-1"
+      teleport_auth_type       = "local"
+      cluster_name             = "groot-net"
+      email                    = var.groot_net_teleport_cluster_admin_email_address
+      domain_name              = "mordor.groot-net.cloud"
+      dynamo_table_name        = aws_dynamodb_table.groot_net_teleport_cluster_state_table.name
+      dynamo_events_table_name = aws_dynamodb_table.groot_net_teleport_cluster_events_table.name
+      locks_table_name         = aws_dynamodb_table.groot_net_teleport_cluster_locks_table.name
+      license_path             = "/tmp/license.pem"
+      s3_bucket                = aws_s3_bucket.groot_net_teleport_sessions_bucket.id
+      enable_mongodb_listener  = false
+      enable_mysql_listener    = false
+      enable_postgres_listener = false
+      use_acm                  = false
+      use_letsencrypt          = true
+      use_tls_routing          = true
+    }
+  )
+}
+
+resource "aws_eip" "groot_net_teleport_cluster_instance_eip" {
+  instance         = aws_instance.groot_net_teleport_cluster_instance.id
+  domain           = "vpc"
+  public_ipv4_pool = "amazon"
 }
