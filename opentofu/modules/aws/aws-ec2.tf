@@ -21,7 +21,7 @@ resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
     arn = aws_iam_instance_profile.groot_net_teleport_cluster_instance_profile.arn
   }
 
-  image_id = "teleport-oss-18.2.1-arm64-20250912-234316UTC"
+  image_id = "ami-0438fcc5e04aa9413"
 
   instance_initiated_shutdown_behavior = "terminate"
 
