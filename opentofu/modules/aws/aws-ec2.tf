@@ -102,10 +102,6 @@ resource "aws_instance" "groot_net_teleport_cluster_instance" {
     network_interface_id = aws_network_interface.groot_net_teleport_cluster_instance_eni.id
   }
 
-  private_dns_name_options {
-    hostname_type = "resource-name"
-  }
-
   user_data = templatefile(
     "${path.module}/aws-ec2-user-data.tpl",
     {

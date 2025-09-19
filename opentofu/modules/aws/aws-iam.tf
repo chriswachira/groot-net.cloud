@@ -23,7 +23,7 @@ resource "aws_iam_instance_profile" "groot_net_teleport_cluster_instance_profile
 }
 
 // Policy to permit cluster to talk to S3 (Session recordings)
-resource "aws_iam_role_policy" "cluster_s3" {
+resource "aws_iam_role_policy" "groot_net_teleport_cluster_s3_access_iam_policy" {
   name = "groot-net-teleport-cluster-s3"
   role = aws_iam_role.groot_net_teleport_cluster_iam_role.id
 
@@ -58,7 +58,7 @@ EOF
 }
 
 // Policy to permit cluster to access DynamoDB tables (Cluster state, events, and SSL)
-resource "aws_iam_role_policy" "cluster_dynamo" {
+resource "aws_iam_role_policy" "groot_net_teleport_cluster_dynamodb_access_iam_policy" {
   name = "groot-net-teleport-cluster-dynamodb"
   role = aws_iam_role.groot_net_teleport_cluster_iam_role.id
 
@@ -103,7 +103,7 @@ EOF
 }
 
 // Policy to permit cluster to access Route53 (SSL)
-resource "aws_iam_role_policy" "cluster_route53" {
+resource "aws_iam_role_policy" "groot_net_teleport_cluster_route53_access_iam_policy" {
   name = "groot-net-teleport-cluster-route53"
   role = aws_iam_role.groot_net_teleport_cluster_iam_role.id
 
