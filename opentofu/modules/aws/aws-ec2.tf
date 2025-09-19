@@ -6,7 +6,7 @@ resource "aws_key_pair" "groot_net_teleport_cluster_key_pair" {
 resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
   name                                 = "ltpl-groot-net-teleport-cluster-arm"
   instance_type                        = "t4g.micro"
-  image_id                             = "ami-05ee28e96fd387aed"
+  image_id                             = "ami-04668cc11f90ea22e"
   instance_initiated_shutdown_behavior = "terminate"
   key_name                             = aws_key_pair.groot_net_teleport_cluster_key_pair.key_name
   vpc_security_group_ids               = [aws_security_group.groot_net_teleport_cluster_security_group.id]
@@ -90,7 +90,7 @@ resource "aws_network_interface" "groot_net_teleport_cluster_instance_eni" {
 }
 
 resource "aws_instance" "groot_net_teleport_cluster_instance" {
-  ami                     = "ami-05ee28e96fd387aed"
+  ami                     = "ami-04668cc11f90ea22e"
   instance_type           = "t4g.micro"
   disable_api_termination = true
   availability_zone       = aws_subnet.groot_net_vpc_public_subnet.availability_zone
