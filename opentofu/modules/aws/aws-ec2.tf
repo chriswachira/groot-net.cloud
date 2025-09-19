@@ -43,7 +43,8 @@ resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
   }
 
   network_interfaces {
-    associate_public_ip_address = true
+    subnet_id       = aws_subnet.groot_net_vpc_public_subnet.id
+    security_groups = [aws_security_group.groot_net_teleport_cluster_security_group.id]
   }
 
   placement {
@@ -59,4 +60,32 @@ resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
       Name = "groot-net Teleport cluster launch template"
     }
   }
+}
+
+resource "aws_security_group" "groot_net_teleport_cluster_security_group" {
+  name        = "sgp-groot-net-teleport-cluster"
+  description = "Security group for groot-net.cloud Teleport cluster access"
+  vpc_id      = aws_vpc.groot_net_vpc.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "teleport_cluster_all_traffic_egress_sgp_rule" {
+  security_group_id = aws_security_group.groot_net_teleport_cluster_security_group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = -1
+}
+
+resource "aws_vpc_security_group_ingress_rule" "teleport_cluster_https_ingress_sgp_rule" {
+  security_group_id = aws_security_group.groot_net_teleport_cluster_security_group.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+}
+
+resource "aws_vpc_security_group_ingress_rule" "teleport_cluster_ssh_ingress_sgp_rule" {
+  security_group_id = aws_security_group.groot_net_teleport_cluster_security_group.id
+  cidr_ipv4         = "41.90.0.0/16"
+  ip_protocol       = "tcp"
+  from_port         = 22
+  to_port           = 22
 }
