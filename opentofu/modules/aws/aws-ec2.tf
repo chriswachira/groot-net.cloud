@@ -4,14 +4,18 @@ resource "aws_key_pair" "groot_net_teleport_cluster_key_pair" {
 }
 
 resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
-  name          = "ltpl-groot-net-teleport-cluster"
-  instance_type = "t4g.micro"
+  name                                 = "ltpl-groot-net-teleport-cluster-arm"
+  instance_type                        = "t4g.micro"
+  image_id                             = "ami-0438fcc5e04aa9413"
+  instance_initiated_shutdown_behavior = "terminate"
+  key_name                             = aws_key_pair.groot_net_teleport_cluster_key_pair.key_name
+  vpc_security_group_ids               = [aws_security_group.groot_net_teleport_cluster_security_group.id]
 
   block_device_mappings {
     device_name = "/dev/sdf"
 
     ebs {
-      volume_size           = 20
+      volume_size           = 10
       volume_type           = "gp2"
       delete_on_termination = true
     }
@@ -21,15 +25,9 @@ resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
     arn = aws_iam_instance_profile.groot_net_teleport_cluster_instance_profile.arn
   }
 
-  image_id = "ami-0438fcc5e04aa9413"
-
-  instance_initiated_shutdown_behavior = "terminate"
-
   instance_market_options {
     market_type = "spot"
   }
-
-  key_name = aws_key_pair.groot_net_teleport_cluster_key_pair.key_name
 
   metadata_options {
     http_endpoint               = "enabled"
@@ -42,16 +40,13 @@ resource "aws_launch_template" "groot_net_teleport_cluster_ltpl" {
     enabled = true
   }
 
-  network_interfaces {
-    subnet_id       = aws_subnet.groot_net_vpc_public_subnet.id
-    security_groups = [aws_security_group.groot_net_teleport_cluster_security_group.id]
+  private_dns_name_options {
+    hostname_type = "resource-name"
   }
 
   placement {
     availability_zone = aws_subnet.groot_net_vpc_public_subnet.availability_zone
   }
-
-  vpc_security_group_ids = [aws_security_group.groot_net_teleport_cluster_security_group.id]
 
   tag_specifications {
     resource_type = "instance"
@@ -98,10 +93,8 @@ resource "aws_instance" "groot_net_teleport_cluster_instance" {
   ami                     = "ami-0438fcc5e04aa9413"
   instance_type           = "t4g.micro"
   disable_api_termination = true
-  subnet_id               = aws_subnet.groot_net_vpc_public_subnet.id
   availability_zone       = aws_subnet.groot_net_vpc_public_subnet.availability_zone
   key_name                = aws_key_pair.groot_net_teleport_cluster_key_pair.key_name
-  vpc_security_group_ids  = [aws_security_group.groot_net_teleport_cluster_security_group.id]
   iam_instance_profile    = aws_iam_instance_profile.groot_net_teleport_cluster_instance_profile.id
 
   primary_network_interface {
