@@ -1,7 +1,7 @@
 resource "aws_autoscaling_group" "groot_net_teleport_cluster_asg" {
   name                = "asg-groot-net-teleport-cluster"
-  max_size            = 1
-  min_size            = 1
+  max_size            = 0
+  min_size            = 0
   desired_capacity    = 0
   vpc_zone_identifier = [aws_subnet.groot_net_vpc_public_subnet.id]
 

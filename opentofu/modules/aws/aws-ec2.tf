@@ -86,7 +86,8 @@ resource "aws_vpc_security_group_ingress_rule" "teleport_cluster_ssh_ingress_sgp
 }
 
 resource "aws_network_interface" "groot_net_teleport_cluster_instance_eni" {
-  subnet_id = aws_subnet.groot_net_vpc_public_subnet.id
+  subnet_id       = aws_subnet.groot_net_vpc_public_subnet.id
+  security_groups = [aws_security_group.groot_net_teleport_cluster_security_group.id]
 }
 
 resource "aws_instance" "groot_net_teleport_cluster_instance" {
@@ -101,11 +102,8 @@ resource "aws_instance" "groot_net_teleport_cluster_instance" {
     network_interface_id = aws_network_interface.groot_net_teleport_cluster_instance_eni.id
   }
 
-  ebs_block_device {
-    device_name           = "/dev/sdf"
-    delete_on_termination = true
-    volume_size           = 10
-    volume_type           = "gp2"
+  private_dns_name_options {
+    hostname_type = "resource-name"
   }
 
   user_data = templatefile(
@@ -113,9 +111,9 @@ resource "aws_instance" "groot_net_teleport_cluster_instance" {
     {
       region                   = "eu-west-1"
       teleport_auth_type       = "local"
-      cluster_name             = "groot-net"
+      cluster_name             = "mordor"
       email                    = var.groot_net_teleport_cluster_admin_email_address
-      domain_name              = "mordor.groot-net.cloud"
+      domain_name              = var.groot_net_teleport_cluster_domain_name
       dynamo_table_name        = aws_dynamodb_table.groot_net_teleport_cluster_state_table.name
       dynamo_events_table_name = aws_dynamodb_table.groot_net_teleport_cluster_events_table.name
       locks_table_name         = aws_dynamodb_table.groot_net_teleport_cluster_locks_table.name
