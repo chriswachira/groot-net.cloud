@@ -68,9 +68,7 @@ resource "aws_vpc_endpoint" "groot_net_vpc_s3_gateway_endpoint" {
   vpc_id            = aws_vpc.groot_net_vpc.id
   vpc_endpoint_type = "Gateway"
   service_name      = "com.amazonaws.eu-west-1.s3"
-  service_region    = "eu-west-1"
   route_table_ids   = [aws_route_table.groot_net_vpc_public_rtb.id, aws_route_table.groot_net_vpc_private_rtb.id]
-  ip_address_type   = "ipv4"
 
   tags = {
     Name = "groot-net VPC S3 Gateway Endpoint"
@@ -81,9 +79,7 @@ resource "aws_vpc_endpoint" "groot_net_vpc_dynamodb_gateway_endpoint" {
   vpc_id            = aws_vpc.groot_net_vpc.id
   vpc_endpoint_type = "Gateway"
   service_name      = "com.amazonaws.eu-west-1.dynamodb"
-  service_region    = "eu-west-1"
   route_table_ids   = [aws_route_table.groot_net_vpc_public_rtb.id, aws_route_table.groot_net_vpc_private_rtb.id]
-  ip_address_type   = "ipv4"
 
   tags = {
     Name = "groot-net VPC DynamoDB Gateway Endpoint"
