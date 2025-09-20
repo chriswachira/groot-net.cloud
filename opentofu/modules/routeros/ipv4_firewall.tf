@@ -44,3 +44,10 @@ resource "routeros_ip_firewall_filter" "ipv4_cctv_vlan_allow_ntp_traffic" {
 
   comment = "Allow NTP traffic for Security Cameras VLAN"
 }
+
+resource "routeros_ip_firewall_nat" "ipv4_ros_containers_allow_internet_access" {
+  chain       = "srcnat"
+  action      = "masquerade"
+  src_address = "172.17.0.0/24"
+
+}

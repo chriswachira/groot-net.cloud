@@ -49,3 +49,11 @@ resource "routeros_interface_vlan" "living_room_tv_vlan" {
   comment = " MAC-based VLAN for home TV."
   mtu     = 1500
 }
+
+resource "routeros_interface_veth" "containers_veth" {
+  name    = "veth-containers"
+  address = ["172.17.0.2/24"]
+  gateway = "172.17.0.1"
+
+  comment = "Virtual ethernet interface for RouterOS containers"
+}
