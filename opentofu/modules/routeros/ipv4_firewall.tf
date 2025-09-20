@@ -40,7 +40,7 @@ resource "routeros_ip_firewall_filter" "ipv4_cctv_vlan_allow_ntp_traffic" {
   out_interface = routeros_interface_ethernet.wan_interface_ether.name
 
   log      = true
-  protocol = "tcp"
+  protocol = "udp"
 
   comment = "Allow NTP traffic for Security Cameras VLAN"
 }

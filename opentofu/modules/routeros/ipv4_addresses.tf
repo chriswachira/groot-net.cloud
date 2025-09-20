@@ -37,3 +37,11 @@ resource "routeros_ip_address" "guests_cidr" {
 
   comment = "Guest Devices"
 }
+
+resource "routeros_ip_address" "containers_cidr" {
+  address   = "172.17.0.1/24"
+  network   = "172.17.0.0"
+  interface = routeros_interface_bridge.containers_bridge.name
+
+  comment = "RouterOS Containers"
+}
