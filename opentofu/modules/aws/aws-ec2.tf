@@ -97,6 +97,7 @@ resource "aws_instance" "groot_net_teleport_cluster_instance" {
   availability_zone       = aws_subnet.groot_net_vpc_public_subnet.availability_zone
   key_name                = aws_key_pair.groot_net_teleport_cluster_key_pair.key_name
   iam_instance_profile    = aws_iam_instance_profile.groot_net_teleport_cluster_instance_profile.id
+  force_destroy           = true
 
   primary_network_interface {
     network_interface_id = aws_network_interface.groot_net_teleport_cluster_instance_eni.id
