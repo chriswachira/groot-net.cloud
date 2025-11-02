@@ -24,6 +24,6 @@ resource "routeros_ip_pool" "vlan50_dhcp_pool" {
 
 resource "routeros_ip_pool" "vlan60_dhcp_pool" {
   name   = "dhcp-vlan60-pool"
-  ranges = ["192.168.88.2"]
+  ranges = ["192.168.88.2-192.168.88.5"]
 
 }

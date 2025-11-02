@@ -14,20 +14,20 @@ resource "routeros_ip_address" "servers_vlan_cidr" {
   comment = "Servers VLAN"
 }
 
-resource "routeros_ip_address" "cctv_vlan_cidr" {
+resource "routeros_ip_address" "surveillance_vlan_cidr" {
   address   = "10.0.50.1/24"
   network   = "10.0.50.0"
-  interface = routeros_interface_vlan.cctv_vlan.name
+  interface = routeros_interface_vlan.surveillance_vlan.name
 
   comment = "Security Cameras VLAN"
 }
 
-resource "routeros_ip_address" "living_room_tv_vlan_cidr" {
-  address   = "192.168.88.1/30"
+resource "routeros_ip_address" "tv_vlan_cidr" {
+  address   = "192.168.88.1/29"
   network   = "192.168.88.0"
-  interface = routeros_interface_vlan.living_room_tv_vlan.name
+  interface = routeros_interface_vlan.tv_vlan.name
 
-  comment = "Living Room TV VLAN"
+  comment = "TV VLAN"
 }
 
 resource "routeros_ip_address" "guests_cidr" {

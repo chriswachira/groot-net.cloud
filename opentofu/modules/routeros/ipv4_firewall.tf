@@ -5,23 +5,23 @@ resource "routeros_ip_firewall_nat" "ipv4_internet_access_firewall_nat_rule" {
 
 }
 
-resource "routeros_ip_firewall_filter" "ipv4_cctv_vlan_block_internet_access" {
+resource "routeros_ip_firewall_filter" "ipv4_surveillance_vlan_block_internet_access" {
   action = "drop"
   chain  = "forward"
 
-  in_interface  = routeros_interface_vlan.cctv_vlan.name
+  in_interface  = routeros_interface_vlan.surveillance_vlan.name
   out_interface = routeros_interface_ethernet.wan_interface_ether.name
 
   comment = "Block internet access for Security Cameras VLAN"
 }
 
-resource "routeros_ip_firewall_filter" "ipv4_cctv_vlan_allow_dns_traffic" {
+resource "routeros_ip_firewall_filter" "ipv4_surveillance_vlan_allow_dns_traffic" {
   action = "accept"
   chain  = "forward"
 
   dst_port = "53"
 
-  in_interface  = routeros_interface_vlan.cctv_vlan.name
+  in_interface  = routeros_interface_vlan.surveillance_vlan.name
   out_interface = routeros_interface_ethernet.wan_interface_ether.name
 
   log      = true
@@ -30,13 +30,13 @@ resource "routeros_ip_firewall_filter" "ipv4_cctv_vlan_allow_dns_traffic" {
   comment = "Allow DNS traffic for Security Cameras VLAN"
 }
 
-resource "routeros_ip_firewall_filter" "ipv4_cctv_vlan_allow_ntp_traffic" {
+resource "routeros_ip_firewall_filter" "ipv4_surveillance_vlan_allow_ntp_traffic" {
   action = "accept"
   chain  = "forward"
 
   dst_port = "123"
 
-  in_interface  = routeros_interface_vlan.cctv_vlan.name
+  in_interface  = routeros_interface_vlan.surveillance_vlan.name
   out_interface = routeros_interface_ethernet.wan_interface_ether.name
 
   log      = true
